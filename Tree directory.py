@@ -55,13 +55,13 @@ for element in paths2:
 
     if path.isdir(element):
         for i in range(elLen-len(dir.split('/'))):
-            print('-----', end='')
+            print('    |', end='')
 
-        print(elements[elLen-1])
+        print('----'+elements[elLen-1])
 
     else:
         for i in range(elLen-len(dir.split('/'))):
-            print('     ', end='')
-        print(elements[elLen-1])
+            print('    |', end='')
+        print('----'+elements[elLen-1])
 
 input('\n\nPress Enter to exit')
