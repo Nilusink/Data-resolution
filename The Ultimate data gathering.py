@@ -1,3 +1,4 @@
+from os import popen
 import subprocess
 import locale
 
@@ -16,7 +17,7 @@ if not lan in languages:
     input('press enter to continue')
     exit()
 
-out = open('passwords.log', 'w')
+out = open('Data.log', 'w')
 
 data = str(subprocess.check_output(['netsh', 'wlan', 'show', 'profiles'])).split('\\n')
 
@@ -38,6 +39,40 @@ for i in profiles:
     except subprocess.CalledProcessError:
         print("{:<30}|".format(i))
         out.write("{:<30}|\n".format(i))
-        
+
+print('\n\n\n')
+out.write('\n\n\n')
+
+
+#   ----------  Mac Adress  ----------
+macA = popen('getmac').read()
+print(macA)
+out.write(macA+'\n')
+
+print('\n\n\nPartitions:')
+out.write('\n\n\nPartitions:')
+
+#   ----------  Partitions  ----------
+p = popen('wmic partition get name,size,type').read()
+print(p)
+out.write(p+'\n')
+
+#   ---------- Installed programms ---
+'''if input('Do you want to check all installed Programms? (Could take a while!) [J/N] ') == 'J':
+    print('\n\n\nInstalled programms:')
+    out.write('\n\n\nInstalled programms:')
+    pr = popen('wmic product get name').read()
+    print(pr)
+    out.write(pr+'\n')
+
+else:
+    print('Not checked for installed programms')
+    out.write('Not checked for installed programms\n')'''
+
+# ---------- General Inforamtion -----
+gIn = popen('systeminfo').read()
+print(gIn)
+out.write(gIn+'\n')
+
 out.close()
 input('\nDone')

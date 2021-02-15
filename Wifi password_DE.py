@@ -22,4 +22,4 @@ for i in profiles:
         print("{:<30}|  {:<}".format(i, results[0]))
     except IndexError:
         print("{:<30}|  {:<}".format(i, ""))
-input()
+input('\nDone')
