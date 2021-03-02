@@ -1,6 +1,7 @@
 from os import walk, listdir
 from os.path import join, getsize, isdir
 from tkinter import filedialog, Tk
+from time import time
 
 def GetFolderSize(path):
     TotalSize = 0
@@ -15,10 +16,14 @@ def GetFolderSize(path):
 root = Tk()
 direc = filedialog.askdirectory()+'/'
 root.destroy()
+print(f'Directory: {direc}\n')
+
+start = time()
 dirs = list()
 for element in listdir(direc):
     if isdir(direc+element):
         dirs.append([direc+element, float(GetFolderSize(direc+element)) /1024 /1024 /1024])
+end = time()
 
 max = [str(), int()]
 min = [str(), int()]
@@ -34,10 +39,9 @@ for element in dirs:
         min = [f'{min[0]} \n{element[0]}', element[1]]
     elif element[1]<min[1]:
         min = [element[0], element[1]]
-    
 
 print(f'\nBiggest folder(s): {max[0]} with {round(max[1], 2)} GB stored')
 print(f'\nSmallest folder(S): {min[0]} with {round(min[1], 2)} GB stored')
 
 
-input()
+input(f'\n\ntook {round(end-start, 2)} sek.')

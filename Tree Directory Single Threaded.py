@@ -1,5 +1,6 @@
 from os import system, listdir, path
 from tkinter import filedialog, Tk
+from time import time
 
 
 paths = list()
@@ -11,44 +12,54 @@ root.destroy()
 
 paths2 = [dir+x for x in listdir(dir)]
 
-invalid = list()
-
 scanned_pahts = list()
 def is_scanned(path):
     return path in scanned_pahts
 
-newelements = int()
+class TreeDirectory:
+    def __init__(self):
+        pass
+    
+    def generate(self, directorys:list) -> list:
+        self.directorys = directorys
+        invalid = list()
+        newelements = int()
+        while True:
+            try:
+                for dire in self.directorys:
+                    if path.isdir(dire):
+                        new = listdir(dire)
+                        for element in new:
+                            #print(dire+element, end='\r')
+                            if not dire+'/'+element in self.directorys and not dire+'/'+element in invalid:
+                                if dire=='C:/':
+                                    if path.isdir(dire+'/'+element):
+                                        self.directorys.append(dire+'/'+element)
 
-while True:
-    try:
-        for dire in paths2:
-            if path.isdir(dire):
-                new = listdir(dire)
-                for element in new:
-                    print(dire+element, end='\r')
-                    if not dire+'/'+element in paths2 and not dire+'/'+element in invalid:
-                        if dire=='C:/':
-                            if path.isdir(dire+'/'+element):
-                                paths2.append(dire+'/'+element)
+                                else:
+                                    if path.isdir(dire+'/'+element):
+                                        self.directorys.append(dire+'/'+element)
+                                    else:
+                                        self.directorys.append(dire+'/'+element)
 
-                        else:
-                            if path.isdir(dire+'/'+element):
-                                paths2.append(dire+'/'+element)
-                            else:
-                                paths2.append(dire+'/'+element)
+                if not newelements:
+                    break
 
-        if not newelements:
-            break
+                newelements = 0
 
-        newelements = 0
+            except PermissionError:
+                self.directorys.remove(dire)
+                print('Peremission Denied: '+dire)
+                invalid.append(dire)
 
-    except PermissionError:
-        paths2.remove(dire)
-        print('Peremission Denied: '+dire)
-        invalid.append(dire)
+        self.directorys.sort()
+        return self.directorys
 
-paths2.sort()
-
+tree = TreeDirectory()
+start = time()
+paths2 = tree.generate(paths2)
+end = time()
+'''
 for element in paths2:
     elements = element.split('/')
     elLen = len(elements)
@@ -62,6 +73,6 @@ for element in paths2:
     else:
         for i in range(elLen-len(dir.split('/'))):
             print('    |', end='')
-        print('----'+elements[elLen-1])
+        print('----'+elements[elLen-1])'''
 
-input('\n\nPress Enter to exit')
+input(f'\n\ntook {round(end-start, 2)} sek.')

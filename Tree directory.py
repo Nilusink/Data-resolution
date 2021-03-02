@@ -3,82 +3,73 @@ import concurrent.futures
 from tkinter import filedialog, Tk
 from time import time
 
-class MyClass:
+class TreeDirectory:
     def __init__(self):
-        self.dirs = list()
         pass
-
-    def myfunc(self, direcotrys):
-        direcotrys = [direcotrys]
+    
+    def generate(self, directorys):
+        self.directorys = [directorys]
         invalid = list()
         newelements = int()
         while True:
             try:
-                for dire in direcotrys:
+                for dire in self.directorys:
                     if path.isdir(dire):
                         new = listdir(dire)
-                        newelements+=len(new)
                         for element in new:
-                            print(dire+element, end='\r')
-                            if not dire+'/'+element in direcotrys and not dire+'/'+element in invalid:
+                            #print(dire+element, end='\r')
+                            if not dire+'/'+element in self.directorys and not dire+'/'+element in invalid:
                                 if dire=='C:/':
                                     if path.isdir(dire+'/'+element):
-                                        self.dirs.append(dire+'/'+element)
+                                        self.directorys.append(dire+'/'+element)
 
                                 else:
                                     if path.isdir(dire+'/'+element):
-                                        self.dirs.append(dire+'/'+element)
+                                        self.directorys.append(dire+'/'+element)
                                     else:
-                                        self.dirs.append(dire+'/'+element)
-                if newelements<=0:
-                    print(newelements)
+                                        self.directorys.append(dire+'/'+element)
+
+                if not newelements:
                     break
 
                 newelements = 0
 
             except PermissionError:
-                direcotrys.remove(dire)
+                try:
+                    self.directorys.remove(dire)
+                except ValueError:
+                    pass
                 print('Peremission Denied: '+dire)
                 invalid.append(dire)
-            
-            except Exception as e:
-                print(e)
 
-        return self.dirs
+        self.directorys.sort()
+        return self.directorys
 
 
 if __name__=='__main__':
-    paths = list()
-    files = list()
-
     root = Tk()
     dir = filedialog.askdirectory()+'/'
     root.destroy()
 
-    paths2 = [dir+x for x in listdir(dir)]
-
+    print(f'Directory: {dir}')
+    pahts = [dir+x for x in listdir(dir)]
 
     scanned_pahts = list()
     def is_scanned(path):
         return path in scanned_pahts
 
-    newelements = int()
-
-    clas = MyClass()
+    tree = TreeDirectory()
     start = time()
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        for elements in executor.map(clas.myfunc, paths2):
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        for elements in executor.map(tree.generate, pahts):
             for element in elements:
                 #print(elements)
-                if not element in paths2:
-                    paths2.append(element)
+                if not element in pahts:
+                    pahts.append(element)
 
     end = time()
-
-    paths2.sort()
-    #print(paths2)
-    for element in paths2:
-        #print(element)
+    '''
+    for element in pahts:
         elements = element.split('/')
         elLen = len(elements)
 
@@ -92,6 +83,6 @@ if __name__=='__main__':
             for i in range(elLen-len(dir.split('/'))):
                 print('    |', end='')
             print('----'+elements[elLen-1])
-    
-    print('\n\n\n',end-start)
+    '''
+    print(f'\n\n\ntookk {round(end-start, 2)} sek.')
     input('\n\nPress Enter to exit')
