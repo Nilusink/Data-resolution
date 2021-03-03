@@ -69,32 +69,47 @@ print()
 # Search for spezific Messages (optional)
 while True:
     print('\n')
-    keyword = input('search chat with keyword: ')   #get the keyword to search for
+    keyword = input('search chat: ')   #get the keyword to search for
     res = list()
+    k = input('Include Keywords? [y/n] ')
+    d = input('Include Dates? [y/n] ')
+    n = input('Include Names? [y/n] ')
 
-    for person in messperperson:                                    # searches the keyword in all messages
-        for message in messperperson[person]:
-            if keyword.lower() in message[0].lower():
-                res.append([message[0], person, message[1]])
+    if k == 'y':
+        for person in messperperson:                                    # searches the keyword in all messages
+            for message in messperperson[person]:
+                if keyword.lower() in message[0].lower():
+                    res.append([message[0], person, message[1]])
 
-    for date in messperday:                                         # searches the keyword in all dates
-        for element in messperday[date]:
-            if keyword in element[1]:
-                with suppress(IndexError):
-                    res.append([element[0], element[2], element[1]])
+    if d == 'y':
+        for date in messperday:                                         # searches the keyword in all dates
+            for element in messperday[date]:
+                if keyword in element[1]:
+                    with suppress(IndexError):
+                        res.append([element[0], element[2], element[1]])
+    
+    if n == 'y':
+        for person in messperperson:                                    # searches the keyword in all names
+            if keyword.lower() in person.lower():
+                for message in messperperson[person]:
+                    res.append([message[0], person, message[1]])
 
     # return sorted list
     res = sorted(sorted(sorted(sorted(sorted(res, key=lambda x: int(x[2][13:15])), key=lambda x: int(x[2][10:12])), key=lambda x: int(x[2][0:2])), key=lambda x: int(x[2][3:5])), key=lambda x: int(x[2][6:8]))
-    print(len(res), ' messages found with keyword: '+keyword+'\n')  
+    print(f'{len(res)} messages found with: {keyword}\n')  
     ans = str()
 
     if len(res)!=0:
         ans = input('Should i show them? [y/n] ').lower()           # asks if to print the messages or not
 
     if ans == 'y':
-        for message in res:
-            if message[1]:
-                print(message[0], ' --- sent by '+message[1]+' on '+message[2])
+        try:
+            for message in res:
+                if message[1]:
+                    print(message[0], ' --- sent by '+message[1]+' on '+message[2])
 
-            else:
-                print(message[0], ' --- sent on '+message[2])
+                else:
+                    print(message[0], ' --- sent on '+message[2])
+
+        except KeyboardInterrupt:
+            ans = None
