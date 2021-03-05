@@ -97,8 +97,8 @@ while True:
     # return sorted list
     res = sorted(sorted(sorted(sorted(sorted(res, key=lambda x: int(x[2][13:15])), key=lambda x: int(x[2][10:12])), key=lambda x: int(x[2][0:2])), key=lambda x: int(x[2][3:5])), key=lambda x: int(x[2][6:8]))
     print(f'{len(res)} messages found with: {keyword}\n')  
+    
     ans = str()
-
     if len(res)!=0:
         ans = input('Should i show them? [y/n] ').lower()           # asks if to print the messages or not
 
