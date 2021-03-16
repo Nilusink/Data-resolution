@@ -5,7 +5,6 @@ from matplotlib.ticker import MaxNLocator
 from matplotlib.figure import Figure
 from tkinter import Tk, Label, Button, Checkbutton, Entry, FLAT, filedialog, ttk, IntVar, messagebox, NO, Menu
 from contextlib import suppress
-import numpy as np
 
 messperperson = list()
 messperday = list()
@@ -144,7 +143,7 @@ class search_window():  # class for the search window
         self.root.configure(bg='grey25')
         self.root.geometry("+%d+%d" % (100, 100))
 
-        self.colls_width = [400, 150, 50]
+        self.colls_width = [400, 115, 85]
         self.statsBox = ttk.Treeview(self.root, columns=self.cols, height=20, show='headings', selectmode="extended")    # create the "Results" list
         for i, element in enumerate(self.cols):
             self.statsBox.column(element, minwidth=0, width=self.colls_width[i], stretch=NO)    # make The first element the biggest column, the second one the socond biggest...
@@ -191,13 +190,15 @@ class search_window():  # class for the search window
                     for element in messperday[date]:
                         if keyword in element[1]:
                             with suppress(IndexError):
-                                res.append([element[0], element[2], element[1]])
+                                if not [element[0], element[2], element[1]] in res:
+                                    res.append([element[0], element[2], element[1]])
 
             if self.Na.get():
                 for person in messperperson:                                    # searches the keyword in all names
                     if keyword.lower() in person.lower():
                         for message in messperperson[person]:
-                            res.append([message[0], person, message[1]])
+                            if not [message[0], person, message[1]] in res:
+                                res.append([message[0], person, message[1]])
 
             # return sorted list
             res = sorted(sorted(sorted(sorted(sorted(res, key=lambda x: int(x[2][13:15])), key=lambda x: int(x[2][10:12])), key=lambda x: int(x[2][0:2])), key=lambda x: int(x[2][3:5])), key=lambda x: int(x[2][6:8]))
